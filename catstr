@@ -1,0 +1,42 @@
+#pragma once
+#include <string>
+#include <vector>
+
+std::vector<std::string> cat_str(char strin[], int len) // 切分字符串
+{
+    std::vector<std::string> restrs;
+    std::string tmpstr;
+    for (int i = 0; i < len; i++)
+    {
+        if (strin[i] != ' ')
+        {
+            if (strin[i] != '(' && strin[i] != ')')
+                tmpstr = tmpstr + strin[i];
+            else // 括号也要单独切分
+            {
+                if (!tmpstr.empty())
+                {
+                    restrs.push_back(tmpstr);
+                    tmpstr.clear();
+                }
+                tmpstr = strin[i];
+                restrs.push_back(tmpstr);
+                tmpstr.clear();
+            }
+        }
+        else
+        {
+            if (!tmpstr.empty())
+            {
+                restrs.push_back(tmpstr);
+                tmpstr.clear();
+            }
+        }
+    }
+    if (!tmpstr.empty()) // 尾处理
+    {
+        restrs.push_back(tmpstr);
+        tmpstr.clear();
+    }
+    return restrs;
+}

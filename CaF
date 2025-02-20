@@ -1,0 +1,69 @@
+#pragma once
+#include <iostream>
+#include <string>
+#include <vector>
+
+typedef struct xee // 变量类型
+{
+    std::string name;
+    bool value : 1;
+    bool lock : 1; // 是否上锁
+} xee;
+
+std::vector<std::string> Operators{"not", "and", "or", "imp", "equ"}; // 运算符
+std::vector<xee> Consts{{"T", true, true},
+                        {"F", false, true}}; // 常量
+
+bool check_level(std::vector<std::string> strs)
+{
+    int level = 0;
+    for (std::string str : strs)
+    {
+        if (str == "(")
+            level++;
+        if (str == ")")
+            level--;
+    }
+    if (level != 0)
+    {
+        std::cerr << "ERR: '()' is not closed!\n";
+        return false;
+    }
+    return true;
+}
+
+std::vector<xee> find_x(std::vector<std::string> strs) // 找出变量
+{
+    std::vector<xee> relist(Consts);
+    bool isx = true;
+    for (std::string str : strs)
+    {
+        isx = true;
+        for (int j = 0; j < 5; j++)
+        {
+            if (str == Operators[j] || str == "(" || str == ")")
+            {
+                isx = false;
+                break;
+            }
+        }
+        if (isx)
+        {
+            bool isfind = false;
+            for (xee x : relist) // 防重复
+            {
+                if (x.name == str)
+                {
+                    isfind = true;
+                    break;
+                }
+            }
+            if (!isfind)
+            {
+                xee tmp{str, false, false};
+                relist.push_back(tmp);
+            }
+        }
+    }
+    return relist;
+}

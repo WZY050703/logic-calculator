@@ -1,0 +1,98 @@
+#pragma once
+#include <string>
+#include <vector>
+
+int calculation(std::vector<std::string> strs, std::vector<xee> x_list)
+{
+    int str_num = strs.size(), x_num = x_list.size();
+    if (str_num <= 0)
+        return -3;
+    int lowest_op = -1, lo_i = 0;
+    for (int i = str_num - 1; i >= 0; i--) // 找最低级的连接符分割,逆序保证从左向右计算
+    {
+        if (strs[i] == "(") // 跳括号内容
+        {
+            int level = 0, strat_i = i;
+            for (i; i < str_num; i++)
+            {
+                if (strs[i] == "(")
+                    level++;
+                else if (strs[i] == ")")
+                    level--;
+                if (level == 0)
+                    break;
+            }
+            if (i + 1 < str_num) // 把最后一个右括号越过
+                i++;
+            else if (strat_i == 0) // 去除最外层括号
+            {
+                strs.pop_back();
+                strs.erase(strs.begin());
+                i = -1; // 更新数据，留预留量
+                str_num = strs.size();
+                continue; // 重新判断
+            }
+        }
+        for (int j = 0; j < 5; j++) // 判断是不是连接符
+        {
+            if (strs[i] == Operators[j])
+            {
+                if (lowest_op < j) // 数字越大级别越低
+                {
+                    lowest_op = j;
+                    lo_i = i;
+                }
+                break;
+            }
+        }
+    }
+    if (lowest_op == -1) // 只有变量了
+    {
+        if (strs.size() > 1)
+            return -3; //-3,
+        for (xee x : x_list)
+        {
+            if (x.name == strs[0])
+                return x.value;
+        }
+        return -1;
+    }
+    if (lowest_op == 0) // not
+    {
+        if (lo_i + 1 < str_num)
+        {
+            int a = calculation(std::vector<std::string>(strs.begin() + lo_i + 1, strs.end()), x_list);
+            if (a != -1)
+                return !a;
+        }
+        return -1;
+    }
+    else if (lo_i > 0 && lo_i + 1 < str_num)
+    {
+        int a = calculation(std::vector<std::string>(strs.begin(), strs.begin() + lo_i), x_list);
+        int b = calculation(std::vector<std::string>(strs.begin() + lo_i + 1, strs.end()), x_list);
+        if (a >= 0 && b >= 0)
+        {
+            if (lowest_op == 1) // and
+            {
+                return (a && b);
+            }
+            else if (lowest_op == 2) // or
+            {
+                return (a || b);
+            }
+            else if (lowest_op == 3) // imp
+            {
+                if (a == 1 && b == 0)
+                    return 0;
+                return 1;
+            }
+            else if (lowest_op == 4) // equ
+            {
+                return (a == b);
+            }
+        }
+        return a + b;
+    }
+    return -1;
+}
