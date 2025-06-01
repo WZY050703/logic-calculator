@@ -14,10 +14,10 @@ std::vector<std::string> Operators{"not", "and", "or", "imp", "equ"}; // 运算�
 std::vector<xee> Consts{{"T", true, true},
                         {"F", false, true}}; // 常量
 
-bool check_level(std::vector<std::string> strs)
+bool check_level(const std::vector<std::string>* strs)
 {
     int level = 0;
-    for (std::string str : strs)
+    for (std::string str : (*strs))
     {
         if (str == "(")
             level++;
@@ -32,11 +32,11 @@ bool check_level(std::vector<std::string> strs)
     return true;
 }
 
-std::vector<xee> find_x(std::vector<std::string> strs) // 找出变量
+std::vector<xee> find_x(const std::vector<std::string>* strs) // 找出变量
 {
     std::vector<xee> relist(Consts);
     bool isx = true;
-    for (std::string str : strs)
+    for (std::string str : (*strs))
     {
         isx = true;
         for (int j = 0; j < 5; j++)

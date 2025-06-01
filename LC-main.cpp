@@ -19,23 +19,12 @@ int main()
 
     auto strs = cat_str(strin, strlen(strin));
 
-    auto x_list = find_x(strs);
+    auto x_list = find_x(&strs);
 
-    for (string str : strs)
-    {
-        cout << str << ','; // << level_list[i] << ';';
-    }
-    cout << endl;
-    for (xee x : x_list)
-    {
-        cout << x.name << ',' << x.value << ';';
-    }
-    cout << endl;
+    if (!check_level(&strs)) // 检查括号
+        return 0;
 
-    if (!check_level(strs)) // 检查括号
-        return 1;
-
-    for (xee x : x_list)
+    for (xee x : x_list) // 输出表头
     {
         if (!(x.name == "T" || x.name == "F"))
             cout << x.name << ' ';
@@ -52,7 +41,7 @@ int main()
             for (int i = 0; i < x.name.size(); i++)
                 cout << ' ';
         }
-        cout << calculation(strs, x_list) << endl;
+        cout << calculation(strs, &x_list) << endl;
         bool isok = false;
         for (int i = x_list.size() - 1; i >= 0; i--) // 变数值
         {

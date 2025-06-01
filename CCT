@@ -2,9 +2,9 @@
 #include <string>
 #include <vector>
 
-int calculation(std::vector<std::string> strs, std::vector<xee> x_list)
+int calculation(std::vector<std::string> strs,const std::vector<xee>* x_list)
 {
-    int str_num = strs.size(), x_num = x_list.size();
+    int str_num = strs.size();
     if (str_num <= 0)
         return -3;
     int lowest_op = -1, lo_i = 0;
@@ -50,7 +50,7 @@ int calculation(std::vector<std::string> strs, std::vector<xee> x_list)
     {
         if (strs.size() > 1)
             return -3; //-3,
-        for (xee x : x_list)
+        for (xee x : (*x_list))
         {
             if (x.name == strs[0])
                 return x.value;
